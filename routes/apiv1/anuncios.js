@@ -25,6 +25,11 @@ router.get('/', (req, res, next) => {
     const skip = parseInt(req.query.skip);
     const select = req.query.select;
     const sort = req.query.sort;
+    var precioSplit = precio.split("-");
+    const menor = /-\d/;
+    const mayor = /\d-/;
+    const entre = /\d-\d/;
+    const igual = /\d/;
     const criterios = {};
     if (tags) {
         criterios.tags = tags;
@@ -33,15 +38,25 @@ router.get('/', (req, res, next) => {
         criterios.venta = venta;
     }
     if (precio) {
-        criterios.precio = precio;
+        if (entre.test(precio)) {
+            criterios.precio = { '$gte': precioSplit[0], '$lte': precioSplit[1] };
+        } else if (mayor.test(precio)) {
+            criterios.precio = { '$gte': precioSplit[0] };
+        } else if (menor.test(precio)) {
+            criterios.precio = { '$lte': precioSplit[1] };
+        } else if (igual.test(precio)) {
+            criterios.precio = precioSplit[0];
+        }
     }
 
 
     Anuncio.list(criterios, limit, skip, select, sort, (err, anuncios) => {
         if (err) {
+
             next(err);
             return;
         }
+
         res.json({ success: true, result: anuncios });
 
     });
