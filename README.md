@@ -1,2 +1,2 @@
 # nodepop
-//Para inicializar base de datos:  npm run installDB
+Para inicializar base de datos:  npm run installDB
