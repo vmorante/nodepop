@@ -13,5 +13,6 @@ Iniciar aplicacion npm start
 Falta:
 internalizacion
 custom error
-filtros
+filtros skip(start)
 tags ver cual no es
+cluster
