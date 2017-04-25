@@ -9,6 +9,11 @@ const mongoose = require('mongoose');
 //le pedimos a mongoose el modelo de anuncio
 const Anuncio = mongoose.model('Anuncio');
 
+//jSON web token
+const jwtAuth = require('../../lib/jwtAuth');
+router.use(jwtAuth);
+
+
 //var anuncio = new Anuncio({ nombre: 'Bicicleta', venta: true, precio: '230.15', foto: 'bici.jpg', tags: ['lifestyle', 'mobile'] })
 
 /*anuncio.save(function(err, anuncioCreado) {
@@ -17,15 +22,17 @@ const Anuncio = mongoose.model('Anuncio');
 });
 */
 router.get('/', (req, res, next) => {
-    console.log(req.usuario_id);
+
     const tags = req.query.tags;
     const venta = req.query.venta;
     const precio = req.query.precio;
+    const nombre = req.query.nombre;
     const limit = parseInt(req.query.limit);
     const skip = parseInt(req.query.skip);
     const select = req.query.select;
     const sort = req.query.sort;
-    var precioSplit = precio.split("-");
+    //const start = req.query.start;
+    //var precioSplit = precio.split("-");
     const menor = /-\d/;
     const mayor = /\d-/;
     const entre = /\d-\d/;
@@ -38,6 +45,7 @@ router.get('/', (req, res, next) => {
         criterios.venta = venta;
     }
     if (precio) {
+        var precioSplit = precio.split("-");
         if (entre.test(precio)) {
             criterios.precio = { '$gte': precioSplit[0], '$lte': precioSplit[1] };
         } else if (mayor.test(precio)) {
@@ -47,6 +55,9 @@ router.get('/', (req, res, next) => {
         } else if (igual.test(precio)) {
             criterios.precio = precioSplit[0];
         }
+    }
+    if (nombre) {
+        criterios.nombre = new RegExp('^' + req.query.nombre, "i");
     }
 
 
