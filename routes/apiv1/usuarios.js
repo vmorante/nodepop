@@ -11,7 +11,9 @@ const crypto = require('../../lib/encriptar');
 const Usuario = mongoose.model('Usuario');
 const jwt = require('jsonwebtoken');
 const config = require('../../config');
+require('../../models/CustomError')
 
+const CustomError = mongoose.model('CustomError');
 
 
 router.post('/authenticate', (req, res, next) => {
@@ -27,7 +29,7 @@ router.post('/authenticate', (req, res, next) => {
             return;
         }
         if (!usuario) {
-            res.json({ success: false, error: 'Credenciales incorrectas' });
+            res.json({ success: false, error: new CustomError({ "mensaje": "Credenciales inexistentes", "status": 400 }) });
             return;
         }
         //comprobamos su clave
