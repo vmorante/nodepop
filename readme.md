@@ -10,3 +10,8 @@ Modulos requeridos
 
 Iniciar aplicacion npm start
 
+Falta:
+internalizacion
+custom error
+filtros
+tags ver cual no es
