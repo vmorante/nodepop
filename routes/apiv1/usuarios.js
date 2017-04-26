@@ -1,4 +1,4 @@
-"use strict";
+'use strict';
 
 const express = require('express');
 
@@ -11,12 +11,12 @@ const crypto = require('../../lib/encriptar');
 const Usuario = mongoose.model('Usuario');
 const jwt = require('jsonwebtoken');
 const config = require('../../config');
-require('../../models/CustomError')
+//require('../../models/CustomError')
 
 const i18n = require('../../models/i18n');
 router.use(i18n);
 
-const CustomError = mongoose.model('CustomError');
+//const CustomError = mongoose.model('CustomError');
 
 
 router.post('/authenticate', (req, res, next) => {
@@ -32,11 +32,14 @@ router.post('/authenticate', (req, res, next) => {
             return;
         }
         if (!usuario) {
-            res.json({ success: false, error: res.__("Credenciales inexistentes") });
+            res.json({
+                success: false,
+                error: res.__('Credenciales inexistentes')
+            });
             return;
         }
         //comprobamos su clave
-        var passEncriptada = crypto(correo, clave)
+        var passEncriptada = crypto(correo, clave);
         if (passEncriptada !== usuario.clave) {
             res.json({ success: false, error: res.__('Credenciales incorrectas') });
             return;
@@ -50,7 +53,7 @@ router.post('/authenticate', (req, res, next) => {
                     return;
                 }
                 //se lo devolvemos
-                res.json({ succes: true, token: token })
+                res.json({ succes: true, token: token });
             });
     });
 });
@@ -59,7 +62,7 @@ router.post('/registro', (req, res, next) => {
     //recibimos credenciales
     const correo = req.body.email;
     const clave = req.body.clave;
-    const nombre = req.body.nombre
+    const nombre = req.body.nombre;
 
     //buscamos al usuario en la bd
     Usuario.findOne({ correo: correo }).exec((err, usuario) => {
@@ -73,14 +76,18 @@ router.post('/registro', (req, res, next) => {
             return;
         }
         //comprobamos su clave
-        var passEncriptada = crypto(correo, clave)
+        var passEncriptada = crypto(correo, clave);
         if (!clave || !nombre || !correo) {
             res.json({ success: false, error: res.__('Rellene todos los campos') });
             return;
         }
 
-        var usuario = new Usuario({ "correo": correo, "clave": clave, "nombre": nombre });
-        var passEncriptada = crypto(correo, clave);
+        usuario = new Usuario({
+            'correo': correo,
+            'clave': clave,
+            'nombre': nombre
+        });
+        passEncriptada = crypto(correo, clave);
         usuario.clave = passEncriptada;
         usuario.save(function(err, usuarioCreado) {
             if (err) throw err;
@@ -96,7 +103,7 @@ router.post('/registro', (req, res, next) => {
                     return;
                 }
                 //se lo devolvemos
-                res.json({ succes: true, token: token })
+                res.json({ succes: true, token: token });
             });
     });
 });

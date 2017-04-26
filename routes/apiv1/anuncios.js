@@ -1,13 +1,13 @@
-"use strict";
+'use strict';
 
 const express = require('express');
 
 const router = express.Router();
 
-const mongoose = require('mongoose');
+//const mongoose = require('mongoose');
 
 //le pedimos a mongoose el modelo de anuncio
-const Anuncio = mongoose.model('Anuncio');
+//const Anuncio = mongoose.model('Anuncio');
 
 //jSON web token
 const jwtAuth = require('../../lib/jwtAuth');
@@ -22,6 +22,8 @@ router.use(jwtAuth);
     console.log('Anuncio ' + anuncioCreado.nombre + ' creado');
 });
 */
+/* jshint ignore:start */
+
 router.get('/', (req, res, next) => {
 
     const tags = req.query.tags;
