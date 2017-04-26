@@ -38,7 +38,16 @@ anuncioSchema.statics.list = function(criterios, limit, skip, select, sort, star
 
 };
 
+anuncioSchema.statics.listTag = function(string, callback) {
 
+
+    const query = Anuncio.find({});
+
+
+    query.select('tags');
+    return query.exec(callback);
+
+};
 
 //creamos el modelo de anuncio
 
