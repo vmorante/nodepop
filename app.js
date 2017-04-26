@@ -7,7 +7,7 @@ var bodyParser = require('body-parser');
 
 var index = require('./routes/index');
 var users = require('./routes/users');
-
+var i18n = require('./models/i18n');
 //conectamos a la base de datos
 require('./lib/connectMongoose');
 require('./models/Anuncio');
@@ -32,6 +32,7 @@ app.use('/', require('./routes/index'));
 
 app.use('/users', users);
 
+app.use('/i18n', i18n);
 //app.use('/', require('./install_bd'));
 
 
