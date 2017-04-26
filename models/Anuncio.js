@@ -8,16 +8,29 @@ const anuncioSchema = mongoose.Schema({
     venta: Boolean,
     precio: Number,
     foto: String,
-    tags: [String]
+    tags: {
+        type: [String],
+
+        validate: {
+            validator: function(tags) {
+                if (tags != "mobile" && tags != "lifestyle" && tags != "work" && tags != "motor")
+                    return false;
+                else {
+                    return true;
+                }
+            },
+            message: "Solo es valido.."
+        }
+    }
 });
 
-anuncioSchema.statics.list = function(criterios, limit, skip, select, sort, callback) {
+anuncioSchema.statics.list = function(criterios, limit, skip, select, sort, start, callback) {
     const query = Anuncio.find(criterios);
     query.limit(limit);
     query.skip(skip);
     query.select(select);
     query.sort(sort);
-    //query.start(start);
+    query.skip(start);
     query.exec(callback);
 
 
