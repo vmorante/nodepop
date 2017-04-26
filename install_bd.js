@@ -13,37 +13,73 @@ const Usuario = mongoose.model('Usuario');
 const json = require('./anuncios');
 const json2 = require('./usuarios');
 
-Anuncio.remove({}, function(err) {
-    if (err) return (err);
-    console.log('Coleccion de anuncios borrada');
+
+
+
+
+
+function cargaAnuncios(callback) {
+    Anuncio.remove({}, function(err) {
+        if (err) return (err);
+        console.log('Coleccion de anuncios borrada');
+
+    });
+
+    var guardar = function(err, anuncioCreado) {
+        if (err) throw err;
+        console.log('Anuncio ' + anuncioCreado.nombre + ' creado');
+    };
+    for (var i = 0; i < json.anuncios.length; i++) {
+        var anuncio = new Anuncio(json.anuncios[i]);
+        anuncio.save(guardar);
+
+    }
+
+
+
+}
+
+function cargaUsuarios(callback) {
+    Usuario.remove({}, function(err) {
+        if (err) return (err);
+        console.log('Colleccion de Usuarios eliminada');
+
+    });
+
+
+
+    var guardarUsuario = function(err, usuarioCreado) {
+        if (err) throw err;
+        console.log('Usuario ' + usuarioCreado.nombre + ' creado');
+    };
+
+    for (var i = 0; i < json2.usuarios.length; i++) {
+        var usuario = new Usuario(json2.usuarios[i]);
+        var passEncriptada = crypto(usuario.correo, usuario.clave);
+        usuario.clave = passEncriptada;
+        usuario.save(guardarUsuario);
+
+    }
+    mongoose.connection.close();
+
+
+}
+
+cargaAnuncios(function(err, str) {
+    if (err) {
+        console.log(" error", err);
+        return;
+    }
 
 });
 
 
-Usuario.remove({}, function(err) {
-    if (err) return (err);
-    console.log('Colleccion de Usuarios eliminada');
+
+cargaUsuarios(function(err, str) {
+    if (err) {
+        console.log("error", err);
+        return;
+    }
+
 
 });
-var guardar = function(err, anuncioCreado) {
-    if (err) throw err;
-    console.log('Anuncio ' + anuncioCreado.nombre + ' creado');
-};
-for (var i = 0; i < json.anuncios.length; i++) {
-    var anuncio = new Anuncio(json.anuncios[i]);
-    anuncio.save(guardar);
-
-}
-
-var guardarUsuario = function(err, usuarioCreado) {
-    if (err) throw err;
-    console.log('Usuario ' + usuarioCreado.nombre + ' creado');
-};
-
-for (var i = 0; i < json2.usuarios.length; i++) {
-    var usuario = new Usuario(json2.usuarios[i]);
-    var passEncriptada = crypto(usuario.correo, usuario.clave);
-    usuario.clave = passEncriptada;
-    usuario.save(guardarUsuario);
-
-}
