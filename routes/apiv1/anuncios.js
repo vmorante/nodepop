@@ -77,6 +77,24 @@ router.get('/', (req, res, next) => {
 
 });
 
+router.get('/tags', function(req, res) {
+    Anuncio.listTag(req.query, function(err, tags) {
+        if (err) return res.json({ result: false, err: err });
+        //Cuando esten disponibles los mando en JSON
+        var arrayTags = [];
+        tags.forEach(function(element) {
+            arrayTags.push(element.tags);
+        });
+
+        var uniqueList = arrayTags.toString().split(',').filter(function(item, i, allItems) {
+            return i == allItems.indexOf(item);
+        }).join(',');
+
+        //res.send('Tags Disponibles: ' + uniqueList);
+        res.render('tags', { result: true, tags: uniqueList });
+    });
+});
+
 //POST /apiv1/anuncios
 router.post('/', (req, res, next) => {
     const datosAnuncio = req.body;
