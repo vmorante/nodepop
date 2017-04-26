@@ -11,10 +11,11 @@ Modulos requeridos
 Iniciar aplicacion npm start
 
 Falta:
-internalizacion
-custom error
+internalizacion -
+custom error -
 filtros
-tags ver cual no es
+tags ver cual no es -
 cluster
 documentacion
 lista de tags existentes
+mirar installdb 
