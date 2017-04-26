@@ -13,6 +13,9 @@ const jwt = require('jsonwebtoken');
 const config = require('../../config');
 require('../../models/CustomError')
 
+const i18n = require('../../models/i18n');
+router.use(i18n);
+
 const CustomError = mongoose.model('CustomError');
 
 
@@ -29,13 +32,13 @@ router.post('/authenticate', (req, res, next) => {
             return;
         }
         if (!usuario) {
-            res.json({ success: false, error: new CustomError({ "mensaje": "Credenciales inexistentes", "status": 400 }) });
+            res.json({ success: false, error: res.__("Credenciales inexistentes") });
             return;
         }
         //comprobamos su clave
         var passEncriptada = crypto(correo, clave)
         if (passEncriptada !== usuario.clave) {
-            res.json({ success: false, error: 'Credenciales incorrectas' });
+            res.json({ success: false, error: res.__('Credenciales incorrectas') });
             return;
         }
 
@@ -66,13 +69,13 @@ router.post('/registro', (req, res, next) => {
             return;
         }
         if (usuario) {
-            res.json({ success: false, error: 'Usuario existente' });
+            res.json({ success: false, error: res.__('Usuario existente') });
             return;
         }
         //comprobamos su clave
         var passEncriptada = crypto(correo, clave)
         if (!clave || !nombre || !correo) {
-            res.json({ success: false, error: 'Rellene todos los campos' });
+            res.json({ success: false, error: res.__('Rellene todos los campos') });
             return;
         }
 

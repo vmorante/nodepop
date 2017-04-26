@@ -14,6 +14,7 @@ const jwtAuth = require('../../lib/jwtAuth');
 router.use(jwtAuth);
 
 
+
 //var anuncio = new Anuncio({ nombre: 'Bicicleta', venta: true, precio: '230.15', foto: 'bici.jpg', tags: ['lifestyle', 'mobile'] })
 
 /*anuncio.save(function(err, anuncioCreado) {
@@ -31,7 +32,7 @@ router.get('/', (req, res, next) => {
     const skip = parseInt(req.query.skip);
     const select = req.query.select;
     const sort = req.query.sort;
-    //const start = req.query.start;
+    const start = parseInt(req.query.start);
     //var precioSplit = precio.split("-");
     const menor = /-\d/;
     const mayor = /\d-/;
@@ -61,7 +62,7 @@ router.get('/', (req, res, next) => {
     }
 
 
-    Anuncio.list(criterios, limit, skip, select, sort, (err, anuncios) => {
+    Anuncio.list(criterios, limit, skip, select, sort, start, (err, anuncios) => {
         if (err) {
 
             next(err);
@@ -73,6 +74,48 @@ router.get('/', (req, res, next) => {
     });
 
 });
+
+//POST /apiv1/anuncios
+router.post('/', (req, res, next) => {
+    const datosAnuncio = req.body;
+
+    //creo instancia de anuncio
+    const anuncio = new Anuncio(datosAnuncio);
+    if (anuncio.validate) {
+        //la guardo en la base de datos
+        anuncio.save((err, anuncioGuardado) => {
+            if (err) {
+                next(err);
+                return;
+            }
+            res.json({ success: true, result: anuncioGuardado });
+
+        })
+    } else {
+        console.log(anuncio.validate.message)
+            //res.json({ success: false, result: anuncioGuardado });
+
+    }
+
+
+
+})
+
+
+
+
+//PUT /apiv1/anuncios
+router.put('/:id', (req, res, next) => {
+    const datosAnuncio = req.body;
+    const _id = req.params.id;
+    Anuncio.update({ _id: _id }, datosAnuncio, (err) => {
+        if (err) {
+            next(err);
+            return;
+        }
+        res.json({ success: true });
+    })
+})
 
 
 module.exports = router;
