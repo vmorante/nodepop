@@ -1,4 +1,4 @@
-"use strict";
+'use strict';
 
 
 const mongoose = require('mongoose');
@@ -8,20 +8,21 @@ const anuncioSchema = mongoose.Schema({
     venta: Boolean,
     precio: Number,
     foto: String,
-    tags: {
-        type: [String],
+    tags: [{
+        type: String,
 
         validate: {
             validator: function(tags) {
-                if (tags != "mobile" && tags != "lifestyle" && tags != "work" && tags != "motor")
+                if (tags != 'mobile' && tags != 'lifestyle' && tags != 'work' && tags != 'motor') {
+                    console.log('Los tags introducidos no son correctos');
                     return false;
-                else {
+                } else {
                     return true;
                 }
             },
-            message: "Solo es valido.."
+            message: 'Solo es valido..'
         }
-    }
+    }]
 });
 
 anuncioSchema.statics.list = function(criterios, limit, skip, select, sort, start, callback) {
@@ -35,7 +36,7 @@ anuncioSchema.statics.list = function(criterios, limit, skip, select, sort, star
 
 
 
-}
+};
 
 
 
