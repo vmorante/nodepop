@@ -1,6 +1,7 @@
 {
-    "Credenciales inexistentes": "Non existin credentials",
-    "Usuario existente": "This usuario exist",
-    "Rellene todos los campos": "fill all the campos"
+    "Credenciales inexistentes": "Non-existent credentials",
+    "Usuario existente": "Existing User",
+    "Rellene todos los campos": "Fill in all the fields",
+    "Credenciales incorrectas": "Bad credentials"
 
 }
