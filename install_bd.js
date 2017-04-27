@@ -18,7 +18,7 @@ const json2 = require('./usuarios');
 
 
 
-function cargaAnuncios(callback) {
+function cargaAnuncios() {
     Anuncio.remove({}, function(err) {
         if (err) return (err);
         console.log('Coleccion de anuncios borrada');
@@ -30,6 +30,7 @@ function cargaAnuncios(callback) {
         console.log('Anuncio ' + anuncioCreado.nombre + ' creado');
     };
     for (var i = 0; i < json.anuncios.length; i++) {
+        json.anuncios[i].foto = 'http://localhost:3000/images/anuncios/' + json.anuncios[i].foto;
         var anuncio = new Anuncio(json.anuncios[i]);
         anuncio.save(guardar);
 
@@ -39,7 +40,7 @@ function cargaAnuncios(callback) {
 
 }
 
-function cargaUsuarios(callback) {
+function cargaUsuarios() {
     Usuario.remove({}, function(err) {
         if (err) return (err);
         console.log('Colleccion de Usuarios eliminada');
@@ -65,21 +66,8 @@ function cargaUsuarios(callback) {
 
 }
 
-cargaAnuncios(function(err, str) {
-    if (err) {
-        console.log(" error", err);
-        return;
-    }
-
-});
+cargaAnuncios();
 
 
 
-cargaUsuarios(function(err, str) {
-    if (err) {
-        console.log("error", err);
-        return;
-    }
-
-
-});
+cargaUsuarios();

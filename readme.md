@@ -7,15 +7,14 @@ Modulos requeridos
 -Mongoose
 -jsonwebtoken
 -crypto
+-i18n
+-jshint
 
 Iniciar aplicacion npm start
 
 Falta:
-internalizacion -
-custom error -
-filtros
-tags ver cual no es -
-cluster
+
 documentacion
-lista de tags existentes
-mirar installdb 
+
+
+
