@@ -4,10 +4,10 @@ const express = require('express');
 
 const router = express.Router();
 
-//const mongoose = require('mongoose');
+const mongoose = require('mongoose');
 
 //le pedimos a mongoose el modelo de anuncio
-//const Anuncio = mongoose.model('Anuncio');
+const Anuncio = mongoose.model('Anuncio');
 
 //jSON web token
 const jwtAuth = require('../../lib/jwtAuth');
@@ -35,6 +35,7 @@ router.get('/', (req, res, next) => {
     const select = req.query.select;
     const sort = req.query.sort;
     const start = parseInt(req.query.start);
+    const includeTotal = req.query.includeTotal;
     //var precioSplit = precio.split("-");
     const menor = /-\d/;
     const mayor = /\d-/;
@@ -64,24 +65,39 @@ router.get('/', (req, res, next) => {
     }
 
 
+
     Anuncio.list(criterios, limit, skip, select, sort, start, (err, anuncios) => {
         if (err) {
 
             next(err);
             return;
         }
+        if (includeTotal) {
+            var precioTotal = 0;
+            anuncios.forEach(function(element) {
+                precioTotal += element.precio;
 
-        res.json({ success: true, result: anuncios });
+
+            })
+
+            //res.json({ success: true, precio: precioTotal });
+
+
+            res.json({ success: true, result: anuncios.concat(precioTotal) });
+
+        } else {
+            res.json({ success: true, result: anuncios });
+        };
+
 
     });
-
 });
 
-router.get('/tags', function(req, res) {
+router.get('/tags', (req, res, next) => {
     Anuncio.listTag(req.query, function(err, tags) {
         if (err) return res.json({ result: false, err: err });
-        //Cuando esten disponibles los mando en JSON
-        var arrayTags = [];
+
+        const arrayTags = [];
         tags.forEach(function(element) {
             arrayTags.push(element.tags);
         });
@@ -90,10 +106,12 @@ router.get('/tags', function(req, res) {
             return i == allItems.indexOf(item);
         }).join(',');
 
-        //res.send('Tags Disponibles: ' + uniqueList);
-        res.render('tags', { result: true, tags: uniqueList });
+
+        res.json({ result: true, tags: uniqueList });
     });
+
 });
+
 
 //POST /apiv1/anuncios
 router.post('/', (req, res, next) => {
